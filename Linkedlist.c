@@ -42,7 +42,7 @@ int main()
 		else if(strncmp(menuSelect,"find") == 0) findPart();
 		else if(strncmp(menuSelect,"mod") == 0) modPart();
 		else if(strcmp(menuSelect,"remove") == 0) removePart();
-		else if(strcmp(menuSelect,"write") == 0) writeListToFile();
+		else if(strcmp(menuSelect,"save") == 0) writeListToFile();
 		else if(strcmp(menuSelect,"file") == 0) readFromFile();
 		else if(strcmp(menuSelect,"exit") == 0) running = FALSE;
 		else
@@ -71,7 +71,7 @@ void addPartBegning()
 	*/	
 	printf("Enter a part number number \n");
 	scanf("%ld",&partNumber);		
-	printf("\nenter quantity ");
+	printf("\nEnter quantity ");
 	scanf("%d",&quant);
 	printf("\nEnter a price");
 	scanf("%f",&prices);
@@ -99,17 +99,23 @@ void printList()
 	system("cls");
 	struct Inventory* curr = first;
 	printf("\n");
-	while(curr != NULL)
-	{
-		printf("\n Part Number: %d", curr->partNo);
-		printf("\n Part Quantity: %d", curr->quanity);
-		printf("\n Part Price: %.2f\n", curr->price);	
-			
-		curr = curr->next;				
+	if(first != NULL)	
+	{		
+		while(curr != NULL)
+		{
+			printf("\n Part Number: %d", curr->partNo);
+			printf("\n Part Quantity: %d", curr->quanity);
+			printf("\n Part Price: %.2f\n", curr->price);	
+				
+			curr = curr->next;				
+		}
+		printf("\n");
 	}
-	printf("\n");
+	else
+		{
+			printf("\nThere is no list to print!");
+		}	
 }
-
 void findPart()
 {
 	struct Inventory *curr = first;
@@ -163,7 +169,7 @@ void modPart()
 			switch(changevalue)
 			{
 				case 'p':
-					printf("\nchange item %ld Prince from %.2f: ",curr->partNo,curr->price);
+					printf("\nchange item %ld Price from %.2f: ",curr->partNo,curr->price);
 					scanf("%f",&curr->price);
 					printf("prince of %d has been changed to %.2f\n ",curr->partNo,curr->price);
 					system("pause");
@@ -256,14 +262,14 @@ void menu(char menuSelect[])
 	int i = 0;
 	fflush(stdin);
 	
-	printf("\nview for- View part list ");
-	printf("\nAdd for- Add new part ");
-	printf("\nFind for- Find part ");
-	printf("\nMod for- Modify part");
-	printf("\nRemove for- Remove part");
-	printf("\nSave for- save List to file");
-	printf("\nFile for- Add list from file");
-	printf("\nExit to exit\n");
+	printf("\nview - View part list ");
+	printf("\nAdd - Add new part ");
+	printf("\nFind - Find part ");
+	printf("\nMod - Modify part");
+	printf("\nRemove - Remove part");
+	printf("\nSave - save List to file");
+	printf("\nFile - Add list from file");
+	printf("\nExit - to exit\n");
 	
 	gets(menuSelect);
 	while(menuSelect[i]!='\0')
@@ -289,20 +295,17 @@ void insert(struct Inventory *insert)
 			first = insert;
 			break;
 		}
-		else if(insert->partNo == curr->partNo)
+		else if(insert->partNo == curr->partNo)  
 		{
-			printf("Part number %d already exist: ",curr->partNo);
+			printf("\nPart number %d already exist: ",insert->partNo);
 			free(insert);
 			break;
 		}
-		else if(curr->next != NULL)
+		else if((curr->next != NULL) && (insert->partNo == curr->next->partNo))
 		{
-			if(insert->partNo == curr->next->partNo)
-			{
-				printf("Part number %d already exist: ",curr->partNo);
-				free(insert);
-				break;		
-			}
+			printf("\nPart number %d already exist: ",insert->partNo);
+			free(insert);
+			break;					
 		}
 		else if((insert->partNo >= curr->partNo) && (curr->next == NULL))
 		{
@@ -394,16 +397,4 @@ void readFromFile()
 	}	
 }
 
-void stingToUpper(char theString[])
-{
-	
-	int i = 0;
-	while(theString[i] != '\0')
-	{
-		if(theString[i] > 96)
-		{
-			theString[i] - 32;
-		}
-	}
-}
 
